@@ -1,0 +1,11 @@
+Phase 1 Part 1 AI Log
+
+[Claude Sonnet 4.6] 
+"Write a Vue 3 single-file component called StartScreen. It should display a heading that says 'QuizBlitz', a short tagline, and a button labelled 'Play'. When the button is clicked, it emits an event called 'start'. Use the Options API (not Composition API). No props needed."
+
+[Claude Sonnet 4.6] 
+Write a Vue 3 single-file component called ScoreBoard. It receives a prop called score (Number). It displays a heading 'Game Over', the player's score out of 10, and a 'Play Again' button. When Play Again is clicked, it emits 'restart'. Use the Options API.
+
+[Claude Sonnet 4.6]
+I'm building a Vue 3 quiz game using Vite and the Options API. Write a single-file component called QuestionCard. It receives one prop called question shaped like { question: String, answers: Array, correct: Number }. The template should display the question text and render four answer buttons using v-for. When a button is clicked: disable all buttons immediately, apply a green CSS class to the correct answer button and a red class to the clicked button if it was wrong, wait 1 second using setTimeout, then emit an event called 'answer' with the value true if the answer was correct or false if it was wrong. Reset the highlight state after emitting. Do not use TypeScript.
+mkdir
