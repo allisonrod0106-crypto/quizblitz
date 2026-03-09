@@ -14,4 +14,10 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from) => {
+    if (to.name === 'play' && sessionStorage.getItem('gameStarted') !== 'true') {
+      return { name: 'home' }
+    }
+  })
+
 export default router

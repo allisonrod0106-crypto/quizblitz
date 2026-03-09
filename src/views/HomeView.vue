@@ -15,8 +15,9 @@ export default {
   },
 
   methods: {
-    goToPlay() {
-      this.$router.push({ name: "play" })
+    startGame() {
+    sessionStorage.setItem('gameStarted', 'true')
+    this.$router.push({ name: 'play' })
     }
   }
 }
