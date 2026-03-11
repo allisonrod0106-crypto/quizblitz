@@ -6,6 +6,7 @@
 
 <script>
 import StartScreen from "../components/StartScreen.vue"
+import { useGameStore } from "../stores/gameStore"
 
 export default {
   name: "HomeView",
@@ -14,10 +15,17 @@ export default {
     StartScreen
   },
 
+  created() {
+    // instantiate the store so it appears in DevTools
+    this.gameStore = useGameStore()
+    window.gameStore = this.gameStore
+  },
+
   methods: {
     goToPlay() {
-    sessionStorage.setItem('gameStarted', 'true')
-    this.$router.push({ name: 'play' })
+      this.gameStore.startGame()
+      sessionStorage.setItem('gameStarted', 'true')
+      this.$router.push({ name: 'play' })
     }
   }
 }
