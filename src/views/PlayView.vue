@@ -1,83 +1,91 @@
 <template>
   <div class="play-view">
-    <div v-if="gameState === 'playing'">
-      <p>Score: {{ score }} / {{ questions.length }}</p>
-      <p>Question {{ currentIndex + 1 }} of {{ questions.length }}</p>
 
-      <QuestionCard
-        :question="questions[currentIndex]"
-        @answer="handleAnswer"
-      />
+    <!-- Timer bar -->
+    <div class="timer-bar">
+      <div
+        class="timer-fill"
+        :style="{ width: timerPercent + '%' }"
+        :class="{ urgent: store.timeLeft <= 5 }"
+      ></div>
     </div>
 
-    <div v-else-if="gameState === 'end'">
-      <ScoreBoard
-        :score="score"
-        :total="questions.length"
-        @restart="returnHome"
-      />
-    </div>
+    <!-- Progress indicator -->
+    <p class="progress">
+      Question {{ store.progress.current }} of {{ store.progress.total }}
+    </p>
+
+    <!-- Question -->
+    <QuestionCard
+      v-if="store.gameState === 'playing' && store.currentQuestion"
+      :question="store.currentQuestion"
+      :selectedAnswer="store.selectedAnswer"
+      @answer="store.submitAnswer"
+    />
+
+    <!-- Score screen -->
+    <ScoreBoard
+      v-else-if="store.gameState === 'end'"
+      :score="store.score"
+      :total="store.questions.length"
+      @restart="handleRestart"
+    />
+
   </div>
 </template>
 
 <script>
-import QuestionCard from "../components/QuestionCard.vue"
-import ScoreBoard from "../components/ScoreBoard.vue"
+import { useGameStore } from '../stores/gameStore.js'
+import QuestionCard from '../components/QuestionCard.vue'
+import ScoreBoard from '../components/ScoreBoard.vue'
 
 export default {
-  name: "PlayView",
+  name: 'PlayView',
+  components: { QuestionCard, ScoreBoard },
 
-  components: {
-    QuestionCard,
-    ScoreBoard
+  setup() {
+    const store = useGameStore()
+    return { store }
   },
 
-  data() {
-    return {
-      questions: [ { question: "What does CSS stand for?", answers: [ "Cascading Style Sheets", "Creative Style System", "Computer Style Syntax", "Coloured Screen Sheets" ], correct: 0 },
-      { question: "What is the capital of France?", answers: [ "Berlin", "Madrid", "Paris", "Rome" ], correct: 2 },
-      { question: "What does HTML stand for?", answers: [ "Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "High-Level Text Markup Language", "Hyper Text Management Language" ], correct: 0 },
-      { question: "Which language is used for styling web pages?", answers: [ "HTML", "CSS", "JavaScript", "PHP" ], correct: 1 },
-      { question: "Which is not a JavaScript framework?", answers: [ "Vue.js", "React", "Angular", "Django" ], correct: 3 },
-      { question: "What does SQL stand for?", answers: [ "Structured Query Language", "Structured Question Language", "Scripting Query Language", "Standard Query Language" ], correct: 0 },
-      { question: "What is the main purpose of JavaScript?", answers: [ "To style web pages", "To structure web pages", "To add interactivity to web pages", "To manage databases" ], correct: 2 },
-      { question: "Which HTML element is used to define a navigation link?", answers: [ "<link>", "<nav>", "<a>", "<ul>" ], correct: 2 },
-      { question: "What does API stand for?", answers: [ "Application Programming Interface", "Application Programming Integration", "Application Program Interaction", "Application Programming Internet" ], correct: 0 },
-      { question: "Which of the following is a front-end framework?", answers: [ "Django", "Flask", "React", "Ruby on Rails" ], correct: 2 }],
-      currentIndex: 0, 
-      score: 0, 
-      gameState: "start",
-      selectedAnswer: null
+  computed: {
+    timerPercent() {
+      return (this.store.timeLeft / 15) * 100
     }
-  },
-  
-
-  mounted() {
-    this.startGame()
   },
 
   methods: {
-    startGame() {
-      this.currentIndex = 0
-      this.score = 0
-      this.gameState = "playing"
-    },
-
-    handleAnswer(isCorrect) {
-      if (isCorrect) {
-        this.score++
-      }
-
-      this.currentIndex++
-
-      if (this.currentIndex >= this.questions.length) {
-        this.gameState = "end"
-      }
-    },
-
-    returnHome() {
-      this.$router.push({ name: "home" })
+    handleRestart() {
+      this.store.resetGame()
+      this.$router.push({ name: 'home' })
     }
   }
 }
 </script>
+
+<style scoped>
+.timer-bar {
+  width: 100%;
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.timer-fill {
+  height: 100%;
+  background: #4caf50;
+  transition: width 0.9s linear;
+}
+
+.timer-fill.urgent {
+  background: #e53935;
+}
+
+.progress {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 1rem;
+}
+</style>
