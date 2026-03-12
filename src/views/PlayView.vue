@@ -20,7 +20,7 @@
       v-if="store.gameState === 'playing' && store.currentQuestion"
       :question="store.currentQuestion"
       :selectedAnswer="store.selectedAnswer"
-      @answer="store.submitAnswer"
+      @answer="handleAnswer" 
     />
 
     <!-- Score screen -->
@@ -55,6 +55,9 @@ export default {
   },
 
   methods: {
+    handleAnswer(index){
+      this.store.submitAnswer(index)
+    },
     handleRestart() {
       this.store.resetGame()
       this.$router.push({ name: 'home' })

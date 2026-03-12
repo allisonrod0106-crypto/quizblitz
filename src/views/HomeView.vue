@@ -1,30 +1,25 @@
 <template>
   <div class="home-view">
-    <StartScreen @start="goToPlay" />
+    <StartScreen @start="startGame" />
   </div>
 </template>
 
 <script>
-import StartScreen from "../components/StartScreen.vue"
-import { useGameStore } from "../stores/gameStore"
+import { useGameStore } from '../stores/gameStore.js'
+import StartScreen from '../components/StartScreen.vue'
 
 export default {
-  name: "HomeView",
-
+  name: 'HomeView',
   components: {
-    StartScreen
-  },
-
-  created() {
-    // instantiate the store so it appears in DevTools
-    this.gameStore = useGameStore()
-    window.gameStore = this.gameStore
+      StartScreen  // Register the component
+    },
+  setup() {
+    return { store: useGameStore() }
   },
 
   methods: {
-    goToPlay() {
-      this.gameStore.startGame()
-      sessionStorage.setItem('gameStarted', 'true')
+    startGame() {
+      this.store.startGame()
       this.$router.push({ name: 'play' })
     }
   }
