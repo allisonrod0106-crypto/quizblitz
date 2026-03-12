@@ -1,7 +1,7 @@
  <template>
   <div class="score-board">
     <h1>Game Over</h1>
-    <p>Your Score: {{ score }} / 10</p>
+    <p>You scored {{ score }} out of {{ total }}</p>
     <button @click="playAgain">Play Again</button>
   </div>
 </template>
@@ -13,6 +13,10 @@ export default {
     score: {
       type: Number,
       required: true
+    },
+    total: {
+      type: Number,
+      default: 10
     }
   },
   methods: {
