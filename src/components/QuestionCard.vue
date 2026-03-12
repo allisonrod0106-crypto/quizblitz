@@ -6,7 +6,7 @@
       <button
         v-for="(answer, index) in question.answers"
         :key="index"
-        :disabled="answered"
+        :disabled="selectedAnswer !== null"
         :class="buttonClass(index)"
         @click="selectAnswer(index)"
       >
@@ -24,42 +24,28 @@ export default {
     question: {
       type: Object,
       required: true
-    }
-  },
-
-  data() {
-    return {
-      answered: false,
-      selectedIndex: null
+    },
+    selectedAnswer: {
+      type: Number,
+      default: null
     }
   },
 
   methods: {
     selectAnswer(index) {
-      if (this.answered) return
-
-      this.answered = true
-      this.selectedIndex = index
-
-      const isCorrect = index === this.question.correct
-
-      setTimeout(() => {
-        this.$emit("answer", isCorrect)
-
-        // reset state
-        this.answered = false
-        this.selectedIndex = null
-      }, 1000)
+      if (this.selectedAnswer === null) {
+        this.$emit("answer", index)
+      }
     },
 
     buttonClass(index) {
-      if (!this.answered) return ""
+      if (this.selectedAnswer === null) return ""
 
       if (index === this.question.correct) {
         return "correct"
       }
 
-      if (index === this.selectedIndex && index !== this.question.correct) {
+      if (index === this.selectedAnswer && index !== this.question.correct) {
         return "wrong"
       }
 
@@ -92,12 +78,12 @@ button:disabled {
   opacity: 0.7;
 }
 
-.correct {
+button.correct {
   background-color: #4caf50;
   color: white;
 }
 
-.wrong {
+button.wrong {
   background-color: #f44336;
   color: white;
 }

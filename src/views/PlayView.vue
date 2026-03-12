@@ -46,7 +46,8 @@ export default {
       { question: "Which of the following is a front-end framework?", answers: [ "Django", "Flask", "React", "Ruby on Rails" ], correct: 2 }],
       currentIndex: 0, 
       score: 0, 
-      gameState: "start" 
+      gameState: "start",
+      selectedAnswer: null
     }
   },
   
